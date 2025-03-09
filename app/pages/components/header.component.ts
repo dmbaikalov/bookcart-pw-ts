@@ -14,6 +14,7 @@ export class Header extends Component {
     private githubButton = this.page.getByRole("link", { name: " GitHub" });
     private logo = this.page.getByRole("button", { name: "Book Cart" });
 
+    @step()
     async expectLoaded() {
         await expect(this.cartButton).toBeVisible();
         await expect(this.searchField).toBeVisible();
@@ -23,19 +24,23 @@ export class Header extends Component {
         await expect(this.logo).toBeVisible();
     }
 
+    @step()
     async search(query: string) {
         await this.searchField.pressSequentially(query);
         await this.page.keyboard.press("Enter");
     }
 
+    @step()
     async openLoginForm() {
         await this.loginButton.click();
     }
 
+    @step()
     async openSwaggerDocs() {
         await this.swaggerButton.click();
     }
 
+    @step()
     async openGithubRepo() {
         await this.githubButton.click();
     }
