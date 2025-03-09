@@ -10,5 +10,5 @@ export abstract class Component extends PageHolder {
 }
 
 export abstract class BasePage extends PageHolder {
-    abstract expectLoaded(): Promise<void>;
+    abstract expectLoaded(empty?: boolean): Promise<void>;
 }
