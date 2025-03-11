@@ -1,3 +1,5 @@
+import { test } from "@playwright/test";
+
 export function step(stepName?: string) {
     return function decorator(
         tar: Function,
@@ -25,19 +27,15 @@ export function step(stepName?: string) {
                 sName += ` [${args[0]._selector}]`;
             }
 
-            console.log(`STEP: ${sName}`);
-            console.log(`Arguments:`, JSON.stringify(args, null, 2));
-
-            try {
-                const result = await tar.apply(this, args);
-                console.log(`Return Value:`, JSON.stringify(result));
-                console.log(`Test Name: ${methodName}`);
-                console.log(`Class Name: ${className}`);
-                return result;
-            } catch (error) {
-                console.error(`Error in step ${sName}:`, error.message);
-                throw error;
-            }
+            return await test.step(sName, async () => {
+                try {
+                    const result = await tar.apply(this, args);
+                    return result;
+                } catch (error: any) {
+                    console.error(`Error in step ${sName}:`, error.message);
+                    throw error;
+                }
+            });
         };
     };
 }

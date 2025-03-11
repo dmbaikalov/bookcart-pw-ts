@@ -5,7 +5,7 @@ dotenv.config();
 const config: PlaywrightTestConfig = {
     timeout: 60000,
     retries: process.env.CI ? 2 : 0,
-    testDir: ".//app/tests",
+    testDir: "./tests",
     workers: process.env.CI ? 4 : undefined,
 
     use: {
