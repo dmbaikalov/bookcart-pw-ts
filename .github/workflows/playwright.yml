@@ -96,9 +96,8 @@ jobs:
             - name: Merge the blobs into on single HTML report
               run: npx playwright merge-reports --reporter html ./all-blob-reports
 
-            - name: Push the new files to GH pages
-              uses: actions/upload-artifact@v4
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v4
               with:
-                  name: html-report--attempt-${{ github.run_attempt }}
-                  path: playwright-report
-                  retention-days: 14
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: playwright-report
