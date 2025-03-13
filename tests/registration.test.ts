@@ -1,5 +1,6 @@
-import { randomUserData } from "../data/user.credentials";
 import { test } from "../fixtures/fixtures";
+
+test.use({ storageState: { cookies: [], origins: [] } });
 
 test("User is able to Register", async ({ app }) => {
     await app.shop.open();
@@ -8,8 +9,8 @@ test("User is able to Register", async ({ app }) => {
     await app.login.clickRegisterButton();
     await app.register.fillFirstNameField();
     await app.register.fillLastNameField();
-    await app.register.fillUsernameField(randomUserData.username);
-    await app.register.fillPasswordField(randomUserData.password as string);
+    await app.register.fillUsernameField();
+    await app.register.fillPasswordField();
     await app.register.fillConfirmPasswordField();
     await app.register.pickGender("Male");
     await app.register.wait(3000);
