@@ -50,19 +50,27 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Checkout gh-pages branch to restore history
+              uses: actions/checkout@v4
+              with:
+                  ref: gh-pages
+                  path: gh-pages
+
             - name: Running tests on Chromium
               if: github.event_name == 'push' || github.event_name == 'pull_request'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && mkdir blob-report && npm ci && npx playwright install && npx playwright test --project=chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && mkdir blob-report && npm ci && npx playwright install \
+                  && npx playwright test --project=chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && mkdir blob-report && npm ci && npx playwright install \
+                  && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Upload blob reports to GH artifacts
               if: always()
@@ -125,3 +133,4 @@ jobs:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_branch: gh-pages
                   publish_dir: playwright-report
+                  keep_files: true
