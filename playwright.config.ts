@@ -7,6 +7,8 @@ const config: PlaywrightTestConfig = {
     retries: process.env.CI ? 2 : 0,
     testDir: "./tests",
     workers: process.env.CI ? 4 : undefined,
+    globalSetup: require.resolve("./tests/auth.setup.ts"),
+    globalTeardown: require.resolve("./tests/auth.teardown.ts"),
 
     use: {
         baseURL: `${process.env.BASE_URL}`,
@@ -19,17 +21,28 @@ const config: PlaywrightTestConfig = {
     },
     reporter: process.env.CI ? "html" : "line",
     projects: [
+        { name: "setup", testMatch: /.*\.setup\.ts/ },
+
         {
             name: "chromium",
-            use: { browserName: "chromium" },
+            use: {
+                browserName: "chromium",
+                storageState: "playwright/.auth/user.json",
+            },
         },
         {
             name: "firefox",
-            use: { browserName: "firefox" },
+            use: {
+                browserName: "firefox",
+                storageState: "playwright/.auth/user.json",
+            },
         },
         {
             name: "webkit",
-            use: { browserName: "webkit" },
+            use: {
+                browserName: "webkit",
+                storageState: "playwright/.auth/user.json",
+            },
         },
     ],
 };
