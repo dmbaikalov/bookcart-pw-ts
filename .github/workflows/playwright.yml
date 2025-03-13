@@ -55,20 +55,20 @@ jobs:
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --project=chromium --shard ${{ matrix.shard }}"
+                  && npm ci && npx playwright install && npx playwright test --project=chromium --shard${{ matrix.shard }}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --shard ${{ matrix.shard }}"
+                  && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shard }}"
 
             - name: Upload blob reports to GH artifacts
               if: always()
               uses: actions/upload-artifact@v4
               with:
-                  name: merger-reports-as-blob
+                  name: merger-reports-as-blob${{ matrix.shard }}
                   path: blob-report
                   retention-days: 21
 
