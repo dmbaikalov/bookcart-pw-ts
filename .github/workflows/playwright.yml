@@ -55,14 +55,14 @@ jobs:
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && mkdir blob-report && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && mkdir blob-report && npm ci && npx playwright install && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && npm ci && npx playwright install && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Upload blob reports to GH artifacts
               if: always()
