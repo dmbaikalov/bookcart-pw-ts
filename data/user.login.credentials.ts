@@ -1,4 +1,4 @@
-import { UserCredentials } from "../utils/user.credentials1";
+import { UserCredentials } from "../utils/user.data.generator.utils";
 
 export const loginData: UserCredentials = {
     username: "test-user123",

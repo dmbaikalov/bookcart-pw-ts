@@ -1,6 +1,6 @@
 import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
-import { randomUserData } from "../utils/user.credentials1";
+import { randomUserData } from "../utils/user.data.generator.utils";
 import { Header } from "./components/header.component";
 import { Filter } from "./components/filter.component";
 import { Locator } from "@playwright/test";
