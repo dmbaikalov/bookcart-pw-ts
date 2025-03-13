@@ -17,6 +17,7 @@ env:
 
 jobs:
     lint-and-format:
+        timeout-minutes: 5
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -34,7 +35,12 @@ jobs:
               run: npx prettier --check .
 
     e2e-ui-tests:
+        timeout-minutes: 10
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1/2, 2/2]
         needs: lint-and-format
         permissions:
             contents: write
@@ -44,30 +50,71 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Checkout gh-pages branch to restore history
-              uses: actions/checkout@v4
-              with:
-                  ref: gh-pages
-                  path: gh-pages
-
             - name: Running tests on Chromium
               if: github.event_name == 'push' || github.event_name == 'pull_request'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --project=chromium"
+                  && npm ci && npx playwright install && npx playwright test --project=chromium ${{ matrix.shard }}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test"
+                  && npm ci && npx playwright install && npx playwright test ${{ matrix.shard }}"
 
-            - name: Deploying report to GitHub pages
+            - name: Upload blob reports to GH artifacts
+              if: always()
               uses: actions/upload-artifact@v4
-              if: success()
               with:
-                  name: playwright-report
-                  path: playwright-report/
-                  retention-days: 30
+                  name: merger-reports-as-blob
+                  path: blob-report
+                  retention-days: 21
+
+    merge-reports-and-upload:
+        if: always()
+        needs: [e2e-ui-tests]
+        runs-on: ubuntu-latest
+        outputs:
+            timestamp: ${{ steps.timestampid.outputs.timestamp }}
+
+        steps:
+            - name: Set a timestamp
+              id: timesmapid
+              run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Download blob reports from GH actions artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: merged-reports-as-blob
+                  path: downloaded-merged-reports-as-blob
+
+            - name: Merge the blobs into on single HTML report
+              run: npx playwright merge-reports --reporter html ./downloaded-merged-reports-as-blob
+
+            - name: Upload html report to artifacts for history
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report-${{ steps.timestampid.outputs.timestamp }}
+                  path: playwright-report
+                  retention-days: 21
+
+            - name: Push the new files to GH pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./playwright-report
+                  destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+
+            - name: Write URL in summary
+              run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-example-with-typescript/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
