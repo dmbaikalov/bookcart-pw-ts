@@ -40,8 +40,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2, 3, 4]
-                shardTotal: [4]
+                shardIndex: [1, 2]
+                shardTotal: [2]
         permissions:
             contents: write
         steps:
@@ -55,7 +55,7 @@ jobs:
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && mkdir blob-report && npm ci && npx playwright install && npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && mkdir blob-report && npm ci && npx playwright install && npx playwright test --project=chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
