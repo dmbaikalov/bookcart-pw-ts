@@ -37,11 +37,12 @@ jobs:
     e2e-ui-tests:
         timeout-minutes: 10
         runs-on: ubuntu-latest
+        needs: lint-and-format
         strategy:
             fail-fast: false
             matrix:
-                shard: [1/2, 2/2]
-        needs: lint-and-format
+                shardIndex: [1, 2]
+                shardTotal: [2]
         permissions:
             contents: write
         steps:
@@ -55,20 +56,20 @@ jobs:
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --project=chromium --shard${{ matrix.shard }}"
+                  && npm ci && npx playwright install && npx playwright test --project=chromium --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shard }}"
+                  && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Upload blob reports to GH artifacts
               if: always()
               uses: actions/upload-artifact@v4
               with:
-                  name: merger-reports-as-blob${{ matrix.shard }}
+                  name: blob-report-${{ matrix.shardIndex }}
                   path: blob-report
                   retention-days: 21
 
@@ -95,11 +96,12 @@ jobs:
             - name: Download blob reports from GH actions artifacts
               uses: actions/download-artifact@v4
               with:
-                  name: merged-reports-as-blob
-                  path: downloaded-merged-reports-as-blob
+                  path: all-blob-reports
+                  pattern: blob-report-*
+                  merge-multiple: true
 
             - name: Merge the blobs into on single HTML report
-              run: npx playwright merge-reports --reporter html ./downloaded-merged-reports-as-blob
+              run: npx playwright merge-reports --reporter html ./all-blob-reports
 
             - name: Upload html report to artifacts for history
               if: always()
@@ -110,11 +112,11 @@ jobs:
                   retention-days: 21
 
             - name: Push the new files to GH pages
-              uses: peaceiris/actions-gh-pages@v4
+              uses: actions/upload-artifact@v4
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./playwright-report
-                  destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+                  name: html-report--attempt-${{ github.run_attempt }}
+                  path: playwright-report
+                  retention-days: 14
 
             - name: Write URL in summary
               run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-example-with-typescript/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
