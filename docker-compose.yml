@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+    e2e-ui-tests:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - BASE_URL=${BASE_URL}
+        volumes:
+            - ./:/app
+            - ./package.json:/app/package.json
+        working_dir: /app
