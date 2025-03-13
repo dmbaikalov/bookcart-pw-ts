@@ -19,9 +19,7 @@ const config: PlaywrightTestConfig = {
         trace: "on",
         screenshot: "on-first-failure",
     },
-    reporter: process.env.CI
-        ? [["blob", { outputFolder: "blob-report" }]]
-        : "html",
+    reporter: [["blob", { outputFolder: "blob-report" }]],
     projects: [
         { name: "setup", testMatch: /.*\.setup\.ts/ },
 
