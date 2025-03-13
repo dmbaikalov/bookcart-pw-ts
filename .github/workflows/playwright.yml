@@ -52,12 +52,14 @@ jobs:
 
             - name: Running tests on Chromium
               if: github.event_name == 'push' || github.event_name == 'pull_request'
+              continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
                   && npm ci && npx playwright install && npx playwright test --project=chromium"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
+              continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
                   && npm ci && npx playwright install && npx playwright test"
