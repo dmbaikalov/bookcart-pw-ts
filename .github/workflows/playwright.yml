@@ -109,7 +109,7 @@ jobs:
             - name: Download merged report
               uses: actions/download-artifact@v4
               with:
-                  name: html-report--attempt-${{ github.run_attempt }}
+                  name: playwright-report
                   path: playwright-report
 
             - name: Deploy to GH pages

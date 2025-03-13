@@ -1,6 +1,6 @@
 import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
-import { checkoutData } from "../data/user.credentials";
+import { checkoutData } from "../utils/user.credentials1";
 import { Header } from "./components/header.component";
 import { Filter } from "./components/filter.component";
 import { Locator } from "@playwright/test";

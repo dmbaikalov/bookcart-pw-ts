@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import path from "path";
-import { loginData } from "../../data/user.credentials";
+import { loginData } from "../../data/user.login.credentials";
 
 const authFile = path.resolve(__dirname, "../../playwright/.auth/user.json");
 

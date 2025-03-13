@@ -8,25 +8,20 @@ import {
     randState,
 } from "@ngneat/falso";
 
-interface UserCredentials {
+export interface UserCredentials {
     firstname?: string;
     lastname?: string;
     username: string;
     password: string | string[];
 }
 
-interface CheckOutData {
+export interface CheckOutData {
     name: string;
     addressLine1: string;
     addressLine2: string;
     pincode: string;
     state: string;
 }
-
-export const loginData: UserCredentials = {
-    username: "test-user123",
-    password: "Password123",
-};
 
 export const checkoutData: CheckOutData = {
     name: randFullName(),
