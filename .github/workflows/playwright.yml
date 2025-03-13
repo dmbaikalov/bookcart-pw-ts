@@ -54,13 +54,13 @@ jobs:
               if: github.event_name == 'push' || github.event_name == 'pull_request'
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --project=chromium
+                  && npm ci && npx playwright install && npx playwright test --project=chromium"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test
+                  && npm ci && npx playwright install && npx playwright test"
 
             - name: Deploying report to GitHub pages
               uses: actions/upload-artifact@v4
