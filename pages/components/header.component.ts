@@ -1,20 +1,27 @@
-import { expect } from "@playwright/test";
+import { expect, Locator } from "@playwright/test";
 import { Component } from "../abstract.classes";
 import { step } from "../../utils/step.utils";
 
 export class Header extends Component {
-    readonly searchField = this.page.getByRole("combobox", { name: "search" });
-    readonly cartButton = this.page
+    readonly searchField: Locator = this.page.getByRole("combobox", {
+        name: "search",
+    });
+    readonly cartButton: Locator = this.page
         .getByRole("button")
-        .filter({ hasText: "shopping_cart" });
-    readonly loginButton = this.page
+        .filter({ hasText: "shopping_cart" })
+        .nth(0);
+    readonly loginButton: Locator = this.page
         .getByRole("button", { name: "Login" })
         .first();
-    readonly swaggerButton = this.page.getByRole("link", {
+    readonly swaggerButton: Locator = this.page.getByRole("link", {
         name: "Swagger icon Swagger",
     });
-    readonly githubButton = this.page.getByRole("link", { name: " GitHub" });
-    readonly logo = this.page.getByRole("button", { name: "Book Cart" });
+    readonly githubButton: Locator = this.page.getByRole("link", {
+        name: " GitHub",
+    });
+    readonly logo: Locator = this.page.getByRole("button", {
+        name: "Book Cart",
+    });
 
     @step("Checking if Header is loaded")
     async isLoaded() {

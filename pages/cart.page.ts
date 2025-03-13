@@ -1,19 +1,20 @@
 import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
 import { Header } from "./components/header.component";
-import { Filter } from "./components/filter.compnent";
+import { Filter } from "./components/filter.component";
+import { Locator } from "@playwright/test";
 
 export class Cart extends BasePage {
-    pagePath = `shopping-cart`;
+    pagePath: string = `shopping-cart`;
     public header = new Header(this.page);
     public filter = new Filter(this.page);
-    readonly continueShoppingButton = this.page.getByRole("button", {
+    readonly continueShoppingButton: Locator = this.page.getByRole("button", {
         name: "Continue shopping",
     });
-    readonly clearCartButton = this.page.getByRole("button", {
+    readonly clearCartButton: Locator = this.page.getByRole("button", {
         name: "Clear cart",
     });
-    readonly checkoutButton = this.page.getByRole("button", {
+    readonly checkoutButton: Locator = this.page.getByRole("button", {
         name: "CheckOut",
     });
 

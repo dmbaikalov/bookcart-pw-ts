@@ -8,7 +8,7 @@ export class PageHolder {
 export abstract class Component extends PageHolder {}
 
 export abstract class BasePage extends PageHolder {
-    public pagePath = `${process.env.BASE_URL}`;
+    public pagePath: string = `${process.env.BASE_URL}`;
 
     @step("Navigating to _PageName_")
     async open() {

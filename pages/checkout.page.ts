@@ -2,25 +2,34 @@ import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
 import { checkoutData } from "../data/user.credentials";
 import { Header } from "./components/header.component";
-import { Filter } from "./components/filter.compnent";
+import { Filter } from "./components/filter.component";
+import { Locator } from "@playwright/test";
 
 export class Checkout extends BasePage {
     pagePath = `checkout`;
     public header = new Header(this.page);
     public filter = new Filter(this.page);
-    readonly nameField = this.page.getByRole("textbox", { name: "Name" });
-    readonly addressLine1Field = this.page.getByRole("textbox", {
+    readonly nameField: Locator = this.page.getByRole("textbox", {
+        name: "Name",
+    });
+    readonly addressLine1Field: Locator = this.page.getByRole("textbox", {
         name: "Address Line 1",
     });
-    readonly addressLine2Field = this.page.getByRole("textbox", {
+    readonly addressLine2Field: Locator = this.page.getByRole("textbox", {
         name: "Address Line 2",
     });
-    readonly pincodeField = this.page.getByRole("textbox", { name: "Pincode" });
-    readonly stateField = this.page.getByRole("textbox", { name: "State" });
-    readonly placeOrderButton = this.page.getByRole("button", {
+    readonly pincodeField: Locator = this.page.getByRole("textbox", {
+        name: "Pincode",
+    });
+    readonly stateField: Locator = this.page.getByRole("textbox", {
+        name: "State",
+    });
+    readonly placeOrderButton: Locator = this.page.getByRole("button", {
         name: "Place Order",
     });
-    readonly cancelButton = this.page.getByRole("button", { name: "Cancel" });
+    readonly cancelButton: Locator = this.page.getByRole("button", {
+        name: "Cancel",
+    });
 
     @step("Filling all required field to place an order")
     async fillAllRequiredFields() {

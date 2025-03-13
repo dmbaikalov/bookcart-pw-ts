@@ -2,40 +2,44 @@ import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
 import { randomUserData } from "../data/user.credentials";
 import { Header } from "./components/header.component";
-import { Filter } from "./components/filter.compnent";
+import { Filter } from "./components/filter.component";
+import { Locator } from "@playwright/test";
 
 export class Register extends BasePage {
     pagePath = `register`;
     public header = new Header(this.page);
     public filter = new Filter(this.page);
-    readonly firstNameField = this.page.getByRole("textbox", {
+    readonly firstNameField: Locator = this.page.getByRole("textbox", {
         name: "First name",
     });
-    readonly lastNameField = this.page.getByRole("textbox", {
+    readonly lastNameField: Locator = this.page.getByRole("textbox", {
         name: "Last name",
     });
-    readonly userNameField = this.page.getByRole("textbox", {
+    readonly userNameField: Locator = this.page.getByRole("textbox", {
         name: "User name",
     });
-    readonly passwordField = this.page
+    readonly passwordField: Locator = this.page
         .getByRole("textbox", {
             name: "Password",
         })
         .first();
-    readonly confirmPasswordField = this.page.getByRole("textbox", {
+    readonly confirmPasswordField: Locator = this.page.getByRole("textbox", {
         name: "Confirm Password",
     });
-    readonly genderMaleRadioButton = this.page.getByRole("radio", {
+    readonly genderMaleRadioButton: Locator = this.page.getByRole("radio", {
         name: "Male",
         exact: true,
     });
-    readonly genderFemaleRadioButton = this.page.getByRole("radio", {
+    readonly genderFemaleRadioButton: Locator = this.page.getByRole("radio", {
         name: "Female",
         exact: true,
     });
-    readonly registerButton = this.page.locator('button:has-text("Register")');
-
-    readonly loginButton = this.page.getByRole("button", { name: "Login" });
+    readonly registerButton: Locator = this.page.locator(
+        'button:has-text("Register")',
+    );
+    readonly loginButton: Locator = this.page.getByRole("button", {
+        name: "Login",
+    });
 
     @step("Filling First Name field")
     async fillFirstNameField(firstName?: string) {

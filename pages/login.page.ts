@@ -2,22 +2,23 @@ import { BasePage } from "./abstract.classes";
 import { step } from "../utils/step.utils";
 import { loginData } from "../data/user.credentials";
 import { Header } from "./components/header.component";
-import { Filter } from "./components/filter.compnent";
+import { Filter } from "./components/filter.component";
+import { Locator } from "@playwright/test";
 
 export class Login extends BasePage {
     pagePath = `login`;
     public header = new Header(this.page);
     public filter = new Filter(this.page);
-    readonly registerButton = this.page.getByRole("button", {
+    readonly registerButton: Locator = this.page.getByRole("button", {
         name: "Register",
     });
-    readonly usernameField = this.page.getByRole("textbox", {
+    readonly usernameField: Locator = this.page.getByRole("textbox", {
         name: "Username",
     });
-    readonly passwordField = this.page.getByRole("textbox", {
+    readonly passwordField: Locator = this.page.getByRole("textbox", {
         name: "Password",
     });
-    readonly loginButton = this.page
+    readonly loginButton: Locator = this.page
         .getByRole("button", { name: "Login" })
         .nth(1);
 
