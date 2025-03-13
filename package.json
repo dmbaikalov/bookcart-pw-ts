@@ -4,7 +4,19 @@
     "version": "1.0.0",
     "description": "Book Cart app | Playwright &amp; TypeScript",
     "main": "index.js",
-    "scripts": {},
+    "scripts": {
+        "tests:ui:chromium": "npx playwright test --config=ui.config.ts --project=chromium",
+        "tests:ui:firefox": "npx playwright test --config=ui.config.ts --project=firefox",
+        "tests:ui:webkit": "npx playwright test --config=ui.config.ts --project=webkit",
+        "tests:ui:all": "npx playwright test --config=ui.config.ts --reporter=allure-playwright",
+        "tests:ui:chrome:visual": "npx playwright test --config=ui.config.ts --project=chromium --headed",
+        "tests:ui:firefox:visual": "npx playwright test --config=ui.config.ts --project=firefox --headed",
+        "tests:ui:webkit:visual": "npx playwright test --config=ui.config.ts --project=webkit --headed",
+        "tests:api": "npx playwright test --config=api.config.ts --project=chromium",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write ."
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/dmbaikalov/bookcart-pw-ts.git"
