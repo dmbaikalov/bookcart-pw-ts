@@ -3,7 +3,7 @@ name: Playwright Tests
 on:
     workflow_dispatch:
     schedule:
-        - cron: "0 4 * * 1-5"
+        - cron: "0 3 * * 1-5"
     push:
         branches:
             - main
@@ -74,7 +74,7 @@ jobs:
 
     merge-reports-and-upload:
         if: ${{ !cancelled() }}
-        needs: e2e-ui-tests
+        needs: [e2e-ui-tests]
         runs-on: ubuntu-latest
 
         steps:
@@ -93,8 +93,15 @@ jobs:
                   pattern: blob-report-*
                   merge-multiple: true
 
-            - name: Merge the blobs into one single HTML report
+            - name: Merge the blobs into on single HTML report
               run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+            - name: Push the new files to GH pages
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report
+                  retention-days: 14
 
     deploy-report-to-gh-pages:
         needs: merge-reports-and-upload
