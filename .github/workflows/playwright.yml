@@ -13,7 +13,6 @@ on:
 
 env:
     BASE_URL: ${{ vars.BASE_URL }}
-    ENV: ${{ vars.ENV }}
 
 jobs:
     lint-and-format:
@@ -41,8 +40,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2]
-                shardTotal: [2]
+                shardIndex: [1, 2, 3, 4]
+                shardTotal: [4]
         permissions:
             contents: write
         steps:
@@ -56,7 +55,7 @@ jobs:
               continue-on-error: true
               run: |
                   docker compose run e2e-ui-tests /bin/sh -c "ls -la \
-                  && npm ci && npx playwright install && npx playwright test --project=chromium --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
+                  && npm ci && npx playwright install && npx playwright test --shard${{ matrix.shardIndex }}/${{ matrix.shardTotal}}"
 
             - name: Running tests on all browsers
               if: github.event_name == 'schedule'
@@ -74,21 +73,15 @@ jobs:
                   retention-days: 21
 
     merge-reports-and-upload:
-        if: always()
+        if: ${{ !cancelled() }}
         needs: [e2e-ui-tests]
         runs-on: ubuntu-latest
-        outputs:
-            timestamp: ${{ steps.timestampid.outputs.timestamp }}
 
         steps:
-            - name: Set a timestamp
-              id: timesmapid
-              run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
-
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: latest
+                  node-version: lts/*
 
             - name: Install dependencies
               run: npm ci
@@ -103,20 +96,9 @@ jobs:
             - name: Merge the blobs into on single HTML report
               run: npx playwright merge-reports --reporter html ./all-blob-reports
 
-            - name: Upload html report to artifacts for history
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: playwright-report-${{ steps.timestampid.outputs.timestamp }}
-                  path: playwright-report
-                  retention-days: 21
-
             - name: Push the new files to GH pages
               uses: actions/upload-artifact@v4
               with:
                   name: html-report--attempt-${{ github.run_attempt }}
                   path: playwright-report
                   retention-days: 14
-
-            - name: Write URL in summary
-              run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-example-with-typescript/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
