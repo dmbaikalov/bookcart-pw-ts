@@ -19,7 +19,9 @@ const config: PlaywrightTestConfig = {
         trace: "on",
         screenshot: "on-first-failure",
     },
-    reporter: process.env.CI ? "html" : "line",
+    reporter: process.env.CI
+        ? [["html", { outputFolder: "playwright-report" }]]
+        : "line",
     projects: [
         { name: "setup", testMatch: /.*\.setup\.ts/ },
 
