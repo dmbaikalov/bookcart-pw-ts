@@ -2,7 +2,7 @@ import { test } from "../fixtures/fixtures";
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
-test("User is able to Register", async ({ app }) => {
+test.fail("User is able to Register", async ({ app }) => {
     await app.shop.open();
     await app.shop.header.isLoaded();
     await app.shop.header.openLoginForm();

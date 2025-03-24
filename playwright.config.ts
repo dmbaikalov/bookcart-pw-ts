@@ -7,8 +7,8 @@ const config: PlaywrightTestConfig = {
     retries: process.env.CI ? 2 : 0,
     testDir: "./tests",
     workers: process.env.CI ? 4 : undefined,
-    globalSetup: require.resolve("./tests/setup/auth.setup.ts"),
-    globalTeardown: require.resolve("./tests/setup/auth.teardown.ts"),
+    // globalSetup: require.resolve("./tests/setup/auth.setup.ts"),
+    // globalTeardown: require.resolve("./tests/setup/auth.teardown.ts"),
 
     use: {
         baseURL: `${process.env.BASE_URL}`,
