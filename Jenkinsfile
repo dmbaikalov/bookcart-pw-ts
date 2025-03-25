@@ -29,36 +29,27 @@ pipeline {
 
         stage('Setup .NET SDK for C# Backend') {
             steps {
-                dir('./Bookcart') { 
-                    bat 'dotnet --version'
-                    bat 'dotnet restore'
-                }
+                bat 'dotnet --version'
+                bat 'dotnet restore'
             }
         }
 
         stage('Build C# Backend') {
             steps {
-                dir('./Bookcart') { 
-                    bat 'dotnet build --configuration Release'
-                }
+                bat 'dotnet build --configuration Release'
             }
         }
 
         stage('Run Backend API') {
             steps {
-                dir('./Bookcart') { 
-                    bat 'dotnet run --configuration Release'
-                }
+                bat 'dotnet run --configuration Release'
                 sleep 10
             }
         }
 
-        // 8. Deploy Frontend
         stage('Deploy Frontend') {
             steps {
-                dir('/') { 
                     bat 'npx http-server -p 4200'
-                }
                 sleep 5 
             }
         }
