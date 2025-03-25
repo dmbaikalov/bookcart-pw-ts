@@ -27,6 +27,15 @@ pipeline {
             }
         }
 
+        stage('Install .NET SDK') {
+            steps {
+                bat '''
+                curl -o dotnet-install.ps1 https://dot.net/v1/dotnet-install.ps1
+                powershell -ExecutionPolicy Bypass -File dotnet-install.ps1 -Version 9.0
+                '''
+            }
+        }
+
         stage('Setup .NET SDK for C# Backend') {
             steps {
                 bat 'dotnet --version'
