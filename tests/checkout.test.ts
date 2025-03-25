@@ -1,6 +1,6 @@
 import { test } from "../fixtures/fixtures";
 
-test.fail("User is able eto buy a product", async ({ app }) => {
+test("User is able eto buy a product", async ({ app }) => {
     await app.shop.open();
     await app.shop.addFirstBook();
     await app.shop.wait(3000);
