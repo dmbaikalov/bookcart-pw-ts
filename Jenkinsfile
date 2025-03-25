@@ -42,7 +42,7 @@ pipeline {
 
         stage('Run Backend API') {
             steps {
-                bat 'dotnet run --configuration Release --project BookCart.csproj'
+                bat 'dotnet run --configuration Release --project bookcart'
                 sleep 10
             }
         }
